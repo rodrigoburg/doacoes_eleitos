@@ -174,7 +174,7 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
             div.transition()
                 .duration(200)
                 .style("opacity", 1);
-            div.html(("<b>"+d.name + "</b><br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " de " + d.parent.name)
+            div.html(("<b>"+arruma_nome(d.name) + "</b><br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " de " + d.parent.name)
                 .style("left", (d3.event.pageX - 10) + "px")
                 .style("top", (d3.event.pageY - 28) + "px")
 
@@ -189,7 +189,7 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
                 div.transition()
                     .duration(200)
                     .style("opacity", 1);
-                div.html((d.name + ":<br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " de " + d.parent.name)
+                div.html((arruma_nome(d.name) + ":<br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " de " + d.parent.name)
                     .style("left", (d3.event.touches[0].pageX + 10) + "px")
                     .style("top", (d3.event.touches[0].pageY - 60) + "px");
                 d3.event.preventDefault();
@@ -213,7 +213,11 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
         //aqui coloca o texto só se a área for grande o suficiente...
     g.append("text")
         .attr("dy", ".75em")
-        .text(function(d) { if(d.area > 0.003) return d.name; else return ""; })
+        .text(function(d) { 
+            retorno = d.name
+            if (d.area < 0.01) { retorno = "" }
+            return retorno
+        })
         .style("font-size", function(d) { 
             tamanho = Math.min((d.area+0.03)*25,10)
             if (d.name.length > 20) {
@@ -260,25 +264,27 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
         svg.style("shape-rendering", "crispEdges");
         transitioning = false;
       });
-      
-      
-      
+            
       //mostra o div de doadores se estiver nessa tela
-      if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Pessoas") {
-          $("#empresas").hide()
-          $("#pessoas").show()
-      } else if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Empresas") {
-          $("#empresas").show()
-          $("#pessoas").hide()
-      } else {
-          $("#empresas").hide()
-          $("#pessoas").hide()
-      }
-
-      if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Empresas/Grandes doadores") {
-          $("#grandes").show()
-      } else{
-          $("#grandes").hide()
+      if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores") {
+          $("#outros").hide()
+          $("#outros_dilma").hide()
+          $("#aecio").hide()
+          
+      } else if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Presidente") {
+          $("#outros").hide()
+          $("#outros_dilma").show()
+          $("#aecio").show()
+      } else if ($("text:contains('Outros')").length > 0) {
+          $("#outros").show()
+          $("#outros_dilma").hide()
+          $("#aecio").hide()
+          
+          
+    } else {
+          $("#outros").hide()
+          $("#outros_dilma").hide()
+          $("#aecio").hide()
       }
     }
     return g;
@@ -303,14 +309,15 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
   }
 });
 
-var a = null
+
 function arrumaTexto(d) {
-    if(d.area > 0.003) { 
+    if(d.area > 0.01) { 
         var nome = d.name,
-        id = tira_espaco(nome)
-        pos_y = $("rect#"+id+".parent").attr("y")+11,
-        pos_x = $("rect#"+id+".parent").attr("x")+6,
-        dy = .75
+        id = tira_espaco(nome),
+        elemento = $(this),
+        pos_y = elemento.attr("y"),
+        pos_x = elemento.attr("x"),
+        dy = 1
         if(nome != "" && nome.indexOf("VOLTAR") < 0) {
             var texto = d3.select(this),
             words = nome.split(/\s+/).reverse(),
@@ -318,7 +325,7 @@ function arrumaTexto(d) {
             line = [],
             lineNumber = 0,
             lineHeight = 1.1, // ems
-            tspan = texto.text(null).append("tspan").attr("y",pos_y).attr("x",pos_x).attr("dy", dy + "em"),
+            tspan = texto.text(null).append("tspan").attr("dy", dy + "em"),
             width = parseFloat($("rect#"+id+".parent").attr("width")) - 20
             while (word = words.pop()) {
                 line.push(word);
@@ -327,7 +334,8 @@ function arrumaTexto(d) {
                     line.pop();
                     tspan.text(line.join(" "));
                     line = [word];
-                    tspan = texto.append("tspan").attr("y",pos_y).attr("x",pos_x).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                    tspan = texto.append("tspan").attr("x",pos_x).attr("dy", dy + "em").text(word);
+                    tspan.attr("x",pos_x)
                 }
             }
         }
@@ -338,7 +346,42 @@ function tira_espaco(t) {
     return t.replace(/\s+/g,"").replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'')
 }
 
-$("#empresas").hide()
-$("#pessoas").hide()
-$("#grandes").hide()
+function arruma_nome(t) {
+    if (t == "Presidente") return "Presidente (Dilma Rousseff)"
+    if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Governador") {
+        if (t == "AC") return "Tião Viana (PT)"
+        if (t == "AL") return "Renan Filho (PMDB)"
+        if (t == "AP") return "Waldez Góes (PDT)"
+        if (t == "AM") return "José Melo (Pros)"
+        if (t == "BA") return "Rui Costa (PT)"
+        if (t == "CE") return "Camilo Santana (PT)"
+        if (t == "DF") return "Rodrigo Rollemberg (PSB)"
+        if (t == "ES") return "Paulo Hartung (PMDB)"
+        if (t == "GO") return "Marconi Perillo (PSDB)"
+        if (t == "MA") return "Flávio Dino (PCdoB)"
+        if (t == "MG") return "Fernando Pimentel (PT)"
+        if (t == "MT") return "Pedro Taques (PDT)"
+        if (t == "MS") return "Reinaldo Azambuja (PSDB)"
+        if (t == "PA") return "Simão Jatene (PSDB)"
+        if (t == "PB") return "Ricardo Coutinho (PSB)"
+        if (t == "PE") return "Paulo Câmara (PSB"
+        if (t == "PI") return "Wellington Dias (PT)"
+        if (t == "PR") return "Beto Richa (PSDB)"
+        if (t == "RJ") return "Luiz Fernando Pezão (PMDB)"
+        if (t == "RN") return "Robinson Faria (PSD))"
+        if (t == "RS") return "José Ivo Sartori (PMDB"
+        if (t == "RO") return "Confúcio Moura (PMDB)"
+        if (t == "RR") return "Suely Campos (PP)"
+        if (t == "SC") return "Raimundo Colombo (PSD)"
+        if (t == "SE") return "Jackson Barreto (PMDB)"
+        if (t == "SP") return "Geraldo Alckmin (PSDB)"
+        if (t == "TO") return "Marcelo Miranda (PMDB)"
+    }
+    return t
+    
+}
+
+$("#outros").hide()
+$("#outros_dilma").hide()
+$("#aecio").hide()
 
