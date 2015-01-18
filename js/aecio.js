@@ -1,43 +1,3 @@
-var cores = {
-    "PT"       :["#a00200",1],
-    "PST"      :["#a51001",2],
-    "PL"       :["#aa1d01",3],
-    "PTC"      :["#b02b01",4],
-    "PC do B"    :["#b53901",5],
-    "PP"       :["#ba4601",6],
-    "PRB"      :["#bf5301",7],
-    "PSL"      :["#c46102",8],
-    "PPL"      :["#ca6f03",9],
-    "PSB"      :["#cf7d03",10],
-    "PMDB"     :["#d48b03",11],
-    "PROS"     :["#d99803",12],
-    "PRTB"     :["#dea604",13],
-    "PTB"      :["#e4b304",14],
-    "PRP"      :["#e9c104",15],
-    "PDT"      :["#eece04",16],
-    "PHS"      :["#f3dc05",17],
-    "PR"       :["#f4e509",18],
-    "PSC"      :["#eae116",19],
-    "PMR"      :["#dfdd24",20],
-    "PT do B"    :["#d5d931",21],
-    "PV"       :["#cad63e",22],
-    "PMN"      :["#c0d24b",23],
-    "PSD"      :["#b6ce58",24],
-    "PEN"      :["#abc966",25],
-    "PTN"      :["#abc966",25],
-    "SD"      :["#a1c673",26],
-    "PSOL"     :["#97c281",27],
-    "PPS"      :["#8cbe8e",28],
-    "DEM"      :["#82ba9b",29],
-    "PFL_DEM"  :["#77b6a8",30],
-    "PSDB"     :["#6db3b6",31],
-    "PRONA"    :["#62afc3",32],
-    "PAN"      :["#58abd0",33],
-    "PSDC"     :["#4da7de",34],
-    // "ZZZ"   :["#43a3eb",35],
-    "S.Part."   :["#999999",35]
-}
-
 var tamanho = 0;
 
 var margin = {top: 20, right: 0, bottom: 40, left: 0},
@@ -76,26 +36,8 @@ var svg = d3.select("#chart").append("svg")
     .attr("transform", "translate(" + margin.left + ",0)")
     .style("shape-rendering", "crispEdges");
 
-$(window).resize(function(){
-    var width = $("#chart").width();
-    svg.attr("width", width);
-    svg.attr("height", height);
-});
 
-var grandparent = svg.append("g")
-    .attr("class", "grandparent");
-
-grandparent.append("rect")
-    .attr("y", -margin.top)
-    .attr("width", width)
-    .attr("height", margin.top);
-
-grandparent.append("text")
-    .attr("x", 6)
-    .attr("y", 6 - margin.top)
-    .attr("dy", ".75em");
-
-d3.json("dados/doacoes_eleitos.json", function(root) {
+d3.json("dados/aecio.json", function(root) {
   initialize(root);
   accumulate(root);
   layout(root);
@@ -140,13 +82,6 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
   }
 
   function display(d) {
-    grandparent
-        .datum(d.parent)
-        .on("click", transition)
-      
-      .select("text")
-        .text("VOLTAR - "+name(d).replace(".","/"));
-
     var g1 = svg.insert("g", ".grandparent")
         .datum(d)
         .attr("class", "depth");
@@ -271,14 +206,10 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
           $("#outros").hide()
           $("#aecio").hide()
           
-      } else if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Presidente") {
-              $("#outros").hide()
-              $("#aecio").show()
-      
-      }
-      else if ($("text:contains('Outros')").length > 0) {
+      } else if ($("text:contains('Outros')").length > 0) {
           $("#outros").show()
-      
+          $("#aecio").hide()
+          
           
     } else {
           $("#outros").hide()
@@ -377,13 +308,6 @@ function arruma_nome(t) {
     }
     return t
     
-}
-
-function mostra_aecio (){
-	newwindow=window.open("aecio.html",'name','height='+height+',width='+width);
-    console.log(width)
-	if (window.focus) {newwindow.focus()}
-	return false;
 }
 
 $("#outros").hide()
