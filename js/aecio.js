@@ -1,43 +1,3 @@
-var cores = {
-    "PT"       :["#a00200",1],
-    "PST"      :["#a51001",2],
-    "PL"       :["#aa1d01",3],
-    "PTC"      :["#b02b01",4],
-    "PC do B"    :["#b53901",5],
-    "PP"       :["#ba4601",6],
-    "PRB"      :["#bf5301",7],
-    "PSL"      :["#c46102",8],
-    "PPL"      :["#ca6f03",9],
-    "PSB"      :["#cf7d03",10],
-    "PMDB"     :["#d48b03",11],
-    "PROS"     :["#d99803",12],
-    "PRTB"     :["#dea604",13],
-    "PTB"      :["#e4b304",14],
-    "PRP"      :["#e9c104",15],
-    "PDT"      :["#eece04",16],
-    "PHS"      :["#f3dc05",17],
-    "PR"       :["#f4e509",18],
-    "PSC"      :["#eae116",19],
-    "PMR"      :["#dfdd24",20],
-    "PT do B"    :["#d5d931",21],
-    "PV"       :["#cad63e",22],
-    "PMN"      :["#c0d24b",23],
-    "PSD"      :["#b6ce58",24],
-    "PEN"      :["#abc966",25],
-    "PTN"      :["#abc966",25],
-    "SD"      :["#a1c673",26],
-    "PSOL"     :["#97c281",27],
-    "PPS"      :["#8cbe8e",28],
-    "DEM"      :["#82ba9b",29],
-    "PFL_DEM"  :["#77b6a8",30],
-    "PSDB"     :["#6db3b6",31],
-    "PRONA"    :["#62afc3",32],
-    "PAN"      :["#58abd0",33],
-    "PSDC"     :["#4da7de",34],
-    // "ZZZ"   :["#43a3eb",35],
-    "S.Part."   :["#999999",35]
-}
-
 var tamanho = 0;
 
 var margin = {top: 20, right: 0, bottom: 40, left: 0},
@@ -173,7 +133,7 @@ d3.json("dados/aecio.json", function(root) {
             div.transition()
                 .duration(200)
                 .style("opacity", 1);
-            div.html(("<b>"+arruma_nome(d.name) + "</b><br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " " + arruma_tooltip(d))
+            div.html("<b>"+d.name + "</b><br/>R$ " + formatNumber(d.value).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " de Aécio Neves (PSDB)")
                 .style("left", (d3.event.pageX + 10) + "px")
                 .style("top", (d3.event.pageY + 28) + "px")
 
@@ -188,7 +148,7 @@ d3.json("dados/aecio.json", function(root) {
                 div.transition()
                     .duration(200)
                     .style("opacity", 1);
-                div.html((arruma_nome(d.name) + ":<br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " " + arruma_tooltip(d))
+                div.html(d.name + ":<br/>R$ " + formatNumber(d.value).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " de Aécio Neves (PSDB)")
                     .style("left", (d3.event.touches[0].pageX - 60) + "px")
                     .style("top", (d3.event.touches[0].pageY - 60) + "px");
                 d3.event.preventDefault();
@@ -265,24 +225,6 @@ d3.json("dados/aecio.json", function(root) {
         transitioning = false;
       });
             
-      //mostra o div de doadores se estiver nessa tela
-      if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores") {
-          $("#diversos").hide()
-          $("#aecio").hide()
-          
-      } else if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Presidente (Dilma Rousseff)") {
-              $("#diversos").show()
-              $("#aecio").show()
-      
-      }
-      else if ($("text:contains('Diversos')").length > 0) {
-          $("#diversos").show()
-          $("#aecio").hide()
-      
-    } else {
-          $("#diversos").hide()
-          $("#aecio").hide()
-      }
     }
     return g;
   }
@@ -299,13 +241,6 @@ d3.json("dados/aecio.json", function(root) {
         .attr("height", function(d) { return y(d.y + d.dy) - y(d.y); })
   }
 
-  function name(d) {
-    saida = d.parent
-        ? name(d.parent) + "/" + d.name
-        : d.name;
-    saida = arruma_voltar(saida)
-    return saida
-  }
 });
 
 
@@ -344,11 +279,4 @@ function arrumaTexto(d) {
 function tira_espaco(t) {
     return t.replace(/\s+/g,"").replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'')
 }
-
-
-function arruma_tooltip(d) {
-    return "de Aécio Neves (PSDB)"
-    
-}
-
 
