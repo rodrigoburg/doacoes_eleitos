@@ -351,7 +351,7 @@ function arruma_voltar(texto) {
     if (texto == "Doadores/Presidente") {
         return "Doadores/Presidente (Dilma Rousseff)"
     }        
-    else if (texto.indexOf("Governador/") > -1) {
+    else if (texto.indexOf("Governadores/") > -1) {
         uf = texto.split("/")[2]
         return texto.replace(uf,acha_gov(uf))
         
@@ -391,7 +391,7 @@ function acha_gov(t) {
 }
 function arruma_nome(t) {
     if (t == "Presidente") return "Presidente (Dilma Rousseff)"
-    if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Governador") {
+    if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Governadores") {
         return acha_gov(t)
     }
     return t
@@ -411,15 +411,15 @@ function arruma_tooltip(d) {
         return "do total doado"
     }
     
-    if (t == "Deputado Federal") {
-        return "dos Deputados Federais"
+    if (t == "Deputados federais") {
+        return "dos Deputados federais"
     }
     
-    if (t == "Deputado Estadual") {
-        return "dos Deputados Estaduais"
+    if (t == "Deputados estaduais") {
+        return "dos Deputados estaduais"
     }
     
-    if (t == "Governador") {
+    if (t == "Governadores") {
         return "dos Governadores"
     }
     
@@ -427,11 +427,11 @@ function arruma_tooltip(d) {
         return "da Presidente (Dilma Rousseff)"
     }
     
-    if (t == "Senador") {
+    if (t == "Senadores") {
         return "dos Senadores"
     }
 
-    if (d.parent.parent.name == "Governador") {
+    if (d.parent.parent.name == "Governadores") {
         return "de " + acha_gov(t)        
     }
         

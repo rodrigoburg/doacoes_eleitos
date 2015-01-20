@@ -1,3 +1,43 @@
+var cores = {
+    "PT"       :["#a00200",1],
+    "PST"      :["#a51001",2],
+    "PL"       :["#aa1d01",3],
+    "PTC"      :["#b02b01",4],
+    "PC do B"    :["#b53901",5],
+    "PP"       :["#ba4601",6],
+    "PRB"      :["#bf5301",7],
+    "PSL"      :["#c46102",8],
+    "PPL"      :["#ca6f03",9],
+    "PSB"      :["#cf7d03",10],
+    "PMDB"     :["#d48b03",11],
+    "PROS"     :["#d99803",12],
+    "PRTB"     :["#dea604",13],
+    "PTB"      :["#e4b304",14],
+    "PRP"      :["#e9c104",15],
+    "PDT"      :["#eece04",16],
+    "PHS"      :["#f3dc05",17],
+    "PR"       :["#f4e509",18],
+    "PSC"      :["#eae116",19],
+    "PMR"      :["#dfdd24",20],
+    "PT do B"    :["#d5d931",21],
+    "PV"       :["#cad63e",22],
+    "PMN"      :["#c0d24b",23],
+    "PSD"      :["#b6ce58",24],
+    "PEN"      :["#abc966",25],
+    "PTN"      :["#abc966",25],
+    "SD"      :["#a1c673",26],
+    "PSOL"     :["#97c281",27],
+    "PPS"      :["#8cbe8e",28],
+    "DEM"      :["#82ba9b",29],
+    "PFL_DEM"  :["#77b6a8",30],
+    "PSDB"     :["#6db3b6",31],
+    "PRONA"    :["#62afc3",32],
+    "PAN"      :["#58abd0",33],
+    "PSDC"     :["#4da7de",34],
+    // "ZZZ"   :["#43a3eb",35],
+    "S.Part."   :["#999999",35]
+}
+
 var tamanho = 0;
 
 var margin = {top: 20, right: 0, bottom: 40, left: 0},
@@ -36,6 +76,24 @@ var svg = d3.select("#chart").append("svg")
     .attr("transform", "translate(" + margin.left + ",0)")
     .style("shape-rendering", "crispEdges");
 
+$(window).resize(function(){
+    var width = $("#chart").width();
+    svg.attr("width", width);
+    svg.attr("height", height);
+});
+
+var grandparent = svg.append("g")
+    .attr("class", "grandparent");
+
+grandparent.append("rect")
+    .attr("y", -margin.top)
+    .attr("width", width)
+    .attr("height", margin.top);
+
+grandparent.append("text")
+    .attr("x", 6)
+    .attr("y", 6 - margin.top)
+    .attr("dy", ".75em");
 
 d3.json("dados/aecio.json", function(root) {
   initialize(root);
@@ -82,6 +140,12 @@ d3.json("dados/aecio.json", function(root) {
   }
 
   function display(d) {
+    grandparent
+        .datum(d.parent)
+  
+      .select("text")
+        .text("Total de Aécio Neves (PSDB): R$ "+formatNumber(d.value));
+
     var g1 = svg.insert("g", ".grandparent")
         .datum(d)
         .attr("class", "depth");
@@ -109,9 +173,9 @@ d3.json("dados/aecio.json", function(root) {
             div.transition()
                 .duration(200)
                 .style("opacity", 1);
-            div.html(("<b>"+arruma_nome(d.name) + "</b><br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " de " + d.parent.name)
-                .style("left", (d3.event.pageX - 10) + "px")
-                .style("top", (d3.event.pageY - 28) + "px")
+            div.html(("<b>"+arruma_nome(d.name) + "</b><br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " " + arruma_tooltip(d))
+                .style("left", (d3.event.pageX + 10) + "px")
+                .style("top", (d3.event.pageY + 28) + "px")
 
         })
         .on('touchstart', function(d) {
@@ -124,8 +188,8 @@ d3.json("dados/aecio.json", function(root) {
                 div.transition()
                     .duration(200)
                     .style("opacity", 1);
-                div.html((arruma_nome(d.name) + ":<br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " de " + d.parent.name)
-                    .style("left", (d3.event.touches[0].pageX + 10) + "px")
+                div.html((arruma_nome(d.name) + ":<br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " " + arruma_tooltip(d))
+                    .style("left", (d3.event.touches[0].pageX - 60) + "px")
                     .style("top", (d3.event.touches[0].pageY - 60) + "px");
                 d3.event.preventDefault();
             } else {
@@ -135,7 +199,7 @@ d3.json("dados/aecio.json", function(root) {
             }
         })
         .on('mousemove', function(d) {
-            div.style("left", (d3.event.pageX + 10) + "px")
+            div.style("left", (d3.event.pageX - 100) + "px")
                 .style("top", (d3.event.pageY - 60) + "px");
         })
         .on("mouseout", function(d) {
@@ -158,7 +222,7 @@ d3.json("dados/aecio.json", function(root) {
             if (d.name.length > 20) {
                 tamanho = Math.min(tamanho*0.75,10)
             }
-            return (tamanho*window.width/1718) + "em"; })
+            return (tamanho*window.width/2500) + "em"; })
         .attr("width", function(d) { return $("rect[nome='"+d.name+"']").attr("width") })
         .call(text)
         .each(arrumaTexto)
@@ -203,16 +267,20 @@ d3.json("dados/aecio.json", function(root) {
             
       //mostra o div de doadores se estiver nessa tela
       if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores") {
-          $("#outros").hide()
+          $("#diversos").hide()
           $("#aecio").hide()
           
-      } else if ($("text:contains('Outros')").length > 0) {
-          $("#outros").show()
+      } else if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Presidente (Dilma Rousseff)") {
+              $("#diversos").show()
+              $("#aecio").show()
+      
+      }
+      else if ($("text:contains('Diversos')").length > 0) {
+          $("#diversos").show()
           $("#aecio").hide()
-          
-          
+      
     } else {
-          $("#outros").hide()
+          $("#diversos").hide()
           $("#aecio").hide()
       }
     }
@@ -232,9 +300,11 @@ d3.json("dados/aecio.json", function(root) {
   }
 
   function name(d) {
-    return d.parent
+    saida = d.parent
         ? name(d.parent) + "/" + d.name
         : d.name;
+    saida = arruma_voltar(saida)
+    return saida
   }
 });
 
@@ -275,41 +345,10 @@ function tira_espaco(t) {
     return t.replace(/\s+/g,"").replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'')
 }
 
-function arruma_nome(t) {
-    if (t == "Presidente") return "Presidente (Dilma Rousseff)"
-    if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Governador") {
-        if (t == "AC") return "Tião Viana (PT)"
-        if (t == "AL") return "Renan Filho (PMDB)"
-        if (t == "AP") return "Waldez Góes (PDT)"
-        if (t == "AM") return "José Melo (Pros)"
-        if (t == "BA") return "Rui Costa (PT)"
-        if (t == "CE") return "Camilo Santana (PT)"
-        if (t == "DF") return "Rodrigo Rollemberg (PSB)"
-        if (t == "ES") return "Paulo Hartung (PMDB)"
-        if (t == "GO") return "Marconi Perillo (PSDB)"
-        if (t == "MA") return "Flávio Dino (PCdoB)"
-        if (t == "MG") return "Fernando Pimentel (PT)"
-        if (t == "MT") return "Pedro Taques (PDT)"
-        if (t == "MS") return "Reinaldo Azambuja (PSDB)"
-        if (t == "PA") return "Simão Jatene (PSDB)"
-        if (t == "PB") return "Ricardo Coutinho (PSB)"
-        if (t == "PE") return "Paulo Câmara (PSB"
-        if (t == "PI") return "Wellington Dias (PT)"
-        if (t == "PR") return "Beto Richa (PSDB)"
-        if (t == "RJ") return "Luiz Fernando Pezão (PMDB)"
-        if (t == "RN") return "Robinson Faria (PSD))"
-        if (t == "RS") return "José Ivo Sartori (PMDB"
-        if (t == "RO") return "Confúcio Moura (PMDB)"
-        if (t == "RR") return "Suely Campos (PP)"
-        if (t == "SC") return "Raimundo Colombo (PSD)"
-        if (t == "SE") return "Jackson Barreto (PMDB)"
-        if (t == "SP") return "Geraldo Alckmin (PSDB)"
-        if (t == "TO") return "Marcelo Miranda (PMDB)"
-    }
-    return t
+
+function arruma_tooltip(d) {
+    return "de Aécio Neves (PSDB)"
     
 }
 
-$("#outros").hide()
-$("#aecio").hide()
 

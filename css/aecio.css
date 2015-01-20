@@ -4,7 +4,7 @@
 
 #chart {
   width: 100%;
-  height: 100%;
+  height: 80%;
   background: #ddd;
   overflow: hidden;
   font-size: 12px;
@@ -12,6 +12,11 @@
 
 text {
   pointer-events: none;
+}
+
+.grandparent text {
+  font-weight: bold;
+  font-size: 12px;
 }
 
 rect {
@@ -109,7 +114,7 @@ rect.child {
 }
 
 .children rect.parent {
-  fill: #27ae60;
+  fill: #4A6B8A;
   fill-opacity: .7;
 }
 
