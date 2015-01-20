@@ -4,7 +4,7 @@
 
 #chart {
   width: 100%;
-  height: 80%;
+  height: 100%;
   background: #ddd;
   overflow: hidden;
   font-size: 12px;
@@ -29,72 +29,6 @@ rect.parent,
 .grandparent rect {
   stroke-width: 2px;
 }
-
-rect#PT.parent {
-    fill:#a00200;
-}
-    
-rect#PST.parent{ fill:#a51001}
-rect#PL.parent{ fill:#aa1d01}
-rect#PTC.parent{ fill:#b02b01}
-rect#PC.parent{ fill:#b53901}
-rect#PP.parent{ fill:#ba4601}
-rect#PRB.parent{ fill:#bf5301}
-rect#PSL.parent{ fill:#c46102}
-rect#PPL.parent{ fill:#ca6f03}
-rect#PSB.parent{ fill:#cf7d03}
-rect#PMDB.parent{ fill:#d48b03}
-rect#PROS.parent{ fill:#d99803}
-rect#PRTB.parent{ fill:#dea60}
-rect#PTB.parent{ fill:#e4b304}
-rect#PRP.parent{ fill:#e9c104}
-rect#PDT.parent{ fill:#eece04}
-rect#PHS.parent{ fill:#f3dc05}
-rect#PR.parent{ fill:#f4e509}
-rect#PSC.parent{ fill:#eae116}
-rect#PMR.parent{ fill:#dfdd24}
-rect#PT do B.parent{ fill:#d5d931}
-rect#PV.parent{ fill:#cad63e}
-rect#PMN.parent{ fill:#c0d24b}
-rect#PSD.parent{ fill:#b6ce58}
-rect#PEN.parent{ fill:#abc966}
-rect#PTN.parent{ fill:#abc966}
-rect#SD.parent{ fill:#a1c673}
-rect#PSOL.parent{ fill:#97c281}
-rect#PPS.parent{ fill:#8cbe8e}
-rect#DEM.parent{ fill:#82ba9b}
-rect#PFL_DEM.parent{ fill:#77b6a8}
-rect#PSDB.parent{ fill:#6db3b6}
-rect#PRONA.parent{ fill:#62afc3}
-rect#PAN.parent{ fill:#58abd0}
-rect#PSDC.parent{ fill:#4da7de}
-rect#RS.parent{ fill:#fec44f}
-rect#SC.parent{ fill:#ffffe5}
-rect#SP.parent{ fill:#004529}
-rect#MG.parent{ fill:#78c679}
-rect#ES.parent{ fill:#addd8e}
-rect#RJ.parent{ fill:#238443}
-rect#GO.parent{ fill:#a50f15}
-rect#DF.parent{ fill:#67000d}
-rect#MS.parent{ fill:#cb181d}
-rect#MT.parent{ fill:#ef3b2c}
-rect#BA.parent{ fill:#d0d1e6}
-rect#SE.parent{ fill:#a6bddb}
-rect#AL.parent{ fill:#74a9cf}
-rect#PB.parent{ fill:#3690c0}
-rect#PE.parent{ fill:#0570b0}
-rect#RN.parent{ fill:#045a8d}
-rect#PI.parent{ fill:#023858}
-rect#CE.parent{ fill:#ece7f2}
-rect#MA.parent{ fill:#fff7fb}
-rect#TO.parent{ fill:#88419d}
-rect#AC.parent{ fill:#8c6bb1}
-rect#AP.parent{ fill:#8c96c6}
-rect#RO.parent{ fill:#9ebcda}
-rect#RR.parent{ fill:#bfd3e6}
-rect#PA.parent{ fill:#e0ecf4}
-rect#AM.parent{ fill:#f7fcfd}
-
 
 rect.child {
   stroke-width: 2px;
