@@ -175,8 +175,8 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
                 .duration(200)
                 .style("opacity", 1);
             div.html(("<b>"+arruma_nome(d.name) + "</b><br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " de " + d.parent.name)
-                .style("left", (d3.event.pageX - 10) + "px")
-                .style("top", (d3.event.pageY - 28) + "px")
+                .style("left", (d3.event.pageX + 10) + "px")
+                .style("top", (d3.event.pageY + 28) + "px")
 
         })
         .on('touchstart', function(d) {
@@ -190,7 +190,7 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
                     .duration(200)
                     .style("opacity", 1);
                 div.html((arruma_nome(d.name) + ":<br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " de " + d.parent.name)
-                    .style("left", (d3.event.touches[0].pageX + 10) + "px")
+                    .style("left", (d3.event.touches[0].pageX - 60) + "px")
                     .style("top", (d3.event.touches[0].pageY - 60) + "px");
                 d3.event.preventDefault();
             } else {
@@ -200,7 +200,7 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
             }
         })
         .on('mousemove', function(d) {
-            div.style("left", (d3.event.pageX + 10) + "px")
+            div.style("left", (d3.event.pageX - 100) + "px")
                 .style("top", (d3.event.pageY - 60) + "px");
         })
         .on("mouseout", function(d) {
@@ -271,7 +271,7 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
           $("#outros").hide()
           $("#aecio").hide()
           
-      } else if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Presidente") {
+      } else if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Presidente (Dilma Rousseff)") {
               $("#outros").hide()
               $("#aecio").show()
       
@@ -301,9 +301,11 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
   }
 
   function name(d) {
-    return d.parent
+    saida = d.parent
         ? name(d.parent) + "/" + d.name
         : d.name;
+    saida = arruma_voltar(saida)
+    return saida
   }
 });
 
@@ -344,36 +346,52 @@ function tira_espaco(t) {
     return t.replace(/\s+/g,"").replace(/[&\/\\#,+()$~%.'":*?<>{}]/g,'')
 }
 
+function arruma_voltar(texto) {
+
+    if (texto == "Doadores/Presidente") {
+        return "Doadores/Presidente (Dilma Rousseff)"
+    }        
+    else if (texto.indexOf("Governador/") > -1) {
+        uf = texto.split("/")[2]
+        return texto.replace(uf,acha_gov(uf))
+        
+    }
+    return texto
+}
+
+function acha_gov(t) {
+    if (t == "AC") return "Tião Viana (PT)"
+    if (t == "AL") return "Renan Filho (PMDB)"
+    if (t == "AP") return "Waldez Góes (PDT)"
+    if (t == "AM") return "José Melo (Pros)"
+    if (t == "BA") return "Rui Costa (PT)"
+    if (t == "CE") return "Camilo Santana (PT)"
+    if (t == "DF") return "Rodrigo Rollemberg (PSB)"
+    if (t == "ES") return "Paulo Hartung (PMDB)"
+    if (t == "GO") return "Marconi Perillo (PSDB)"
+    if (t == "MA") return "Flávio Dino (PCdoB)"
+    if (t == "MG") return "Fernando Pimentel (PT)"
+    if (t == "MT") return "Pedro Taques (PDT)"
+    if (t == "MS") return "Reinaldo Azambuja (PSDB)"
+    if (t == "PA") return "Simão Jatene (PSDB)"
+    if (t == "PB") return "Ricardo Coutinho (PSB)"
+    if (t == "PE") return "Paulo Câmara (PSB"
+    if (t == "PI") return "Wellington Dias (PT)"
+    if (t == "PR") return "Beto Richa (PSDB)"
+    if (t == "RJ") return "Luiz Fernando Pezão (PMDB)"
+    if (t == "RN") return "Robinson Faria (PSD))"
+    if (t == "RS") return "José Ivo Sartori (PMDB"
+    if (t == "RO") return "Confúcio Moura (PMDB)"
+    if (t == "RR") return "Suely Campos (PP)"
+    if (t == "SC") return "Raimundo Colombo (PSD)"
+    if (t == "SE") return "Jackson Barreto (PMDB)"
+    if (t == "SP") return "Geraldo Alckmin (PSDB)"
+    if (t == "TO") return "Marcelo Miranda (PMDB)"
+}
 function arruma_nome(t) {
     if (t == "Presidente") return "Presidente (Dilma Rousseff)"
     if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Governador") {
-        if (t == "AC") return "Tião Viana (PT)"
-        if (t == "AL") return "Renan Filho (PMDB)"
-        if (t == "AP") return "Waldez Góes (PDT)"
-        if (t == "AM") return "José Melo (Pros)"
-        if (t == "BA") return "Rui Costa (PT)"
-        if (t == "CE") return "Camilo Santana (PT)"
-        if (t == "DF") return "Rodrigo Rollemberg (PSB)"
-        if (t == "ES") return "Paulo Hartung (PMDB)"
-        if (t == "GO") return "Marconi Perillo (PSDB)"
-        if (t == "MA") return "Flávio Dino (PCdoB)"
-        if (t == "MG") return "Fernando Pimentel (PT)"
-        if (t == "MT") return "Pedro Taques (PDT)"
-        if (t == "MS") return "Reinaldo Azambuja (PSDB)"
-        if (t == "PA") return "Simão Jatene (PSDB)"
-        if (t == "PB") return "Ricardo Coutinho (PSB)"
-        if (t == "PE") return "Paulo Câmara (PSB"
-        if (t == "PI") return "Wellington Dias (PT)"
-        if (t == "PR") return "Beto Richa (PSDB)"
-        if (t == "RJ") return "Luiz Fernando Pezão (PMDB)"
-        if (t == "RN") return "Robinson Faria (PSD))"
-        if (t == "RS") return "José Ivo Sartori (PMDB"
-        if (t == "RO") return "Confúcio Moura (PMDB)"
-        if (t == "RR") return "Suely Campos (PP)"
-        if (t == "SC") return "Raimundo Colombo (PSD)"
-        if (t == "SE") return "Jackson Barreto (PMDB)"
-        if (t == "SP") return "Geraldo Alckmin (PSDB)"
-        if (t == "TO") return "Marcelo Miranda (PMDB)"
+        return acha_gov(t)
     }
     return t
     
