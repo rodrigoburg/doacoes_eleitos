@@ -174,7 +174,7 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
             div.transition()
                 .duration(200)
                 .style("opacity", 1);
-            div.html(("<b>"+arruma_nome(d.name) + "</b><br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " de " + d.parent.name)
+            div.html(("<b>"+arruma_nome(d.name) + "</b><br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " " + arruma_tooltip(d))
                 .style("left", (d3.event.pageX + 10) + "px")
                 .style("top", (d3.event.pageY + 28) + "px")
 
@@ -189,7 +189,7 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
                 div.transition()
                     .duration(200)
                     .style("opacity", 1);
-                div.html((arruma_nome(d.name) + ":<br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " de " + d.parent.name)
+                div.html((arruma_nome(d.name) + ":<br/>R$ " + formatNumber(d.value)).replace(",",".").replace(",",".") + "<br/>" + (parseInt(d.area * 1000)/10 + "%") + " " + arruma_tooltip(d))
                     .style("left", (d3.event.touches[0].pageX - 60) + "px")
                     .style("top", (d3.event.touches[0].pageY - 60) + "px");
                 d3.event.preventDefault();
@@ -387,6 +387,7 @@ function acha_gov(t) {
     if (t == "SE") return "Jackson Barreto (PMDB)"
     if (t == "SP") return "Geraldo Alckmin (PSDB)"
     if (t == "TO") return "Marcelo Miranda (PMDB)"
+    return t
 }
 function arruma_nome(t) {
     if (t == "Presidente") return "Presidente (Dilma Rousseff)"
@@ -402,6 +403,41 @@ function mostra_aecio (){
     console.log(width)
 	if (window.focus) {newwindow.focus()}
 	return false;
+}
+
+function arruma_tooltip(d) {
+    console.log(d)
+    
+    t = d.parent.name
+    if (t == "Doadores") {
+        return "do total doado"
+    }
+    
+    if (t == "Deputado Federal") {
+        return "dos Deputados Federais"
+    }
+    
+    if (t == "Deputado Estadual") {
+        return "dos Deputados Estaduais"
+    }
+    
+    if (t == "Governador") {
+        return "dos Governadores"
+    }
+    
+    if (t == "Presidente") {
+        return "da Presidente (Dilma Rousseff)"
+    }
+    
+    if (t == "Senador") {
+        return "dos Senadores"
+    }
+
+    if (d.parent.parent.name == "Governador") {
+        return "de " + acha_gov(t)        
+    }
+        
+    return "de " + t
 }
 
 $("#outros").hide()
