@@ -268,20 +268,20 @@ d3.json("dados/doacoes_eleitos.json", function(root) {
             
       //mostra o div de doadores se estiver nessa tela
       if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores") {
-          $("#outros").hide()
+          $("#diversos").hide()
           $("#aecio").hide()
           
       } else if ($("text:contains('VOLTAR')").text() == "VOLTAR - Doadores/Presidente (Dilma Rousseff)") {
-              $("#outros").hide()
+              $("#diversos").show()
               $("#aecio").show()
       
       }
-      else if ($("text:contains('Outros')").length > 0) {
-          $("#outros").show()
+      else if ($("text:contains('Diversos')").length > 0) {
+          $("#diversos").show()
+          $("#aecio").hide()
       
-          
     } else {
-          $("#outros").hide()
+          $("#diversos").hide()
           $("#aecio").hide()
       }
     }
@@ -400,13 +400,11 @@ function arruma_nome(t) {
 
 function mostra_aecio (){
 	newwindow=window.open("aecio.html",'name','height='+height+',width='+width);
-    console.log(width)
 	if (window.focus) {newwindow.focus()}
 	return false;
 }
 
 function arruma_tooltip(d) {
-    console.log(d)
     
     t = d.parent.name
     if (t == "Doadores") {
@@ -440,6 +438,6 @@ function arruma_tooltip(d) {
     return "de " + t
 }
 
-$("#outros").hide()
+$("#diversos").hide()
 $("#aecio").hide()
 
